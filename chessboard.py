@@ -1,13 +1,14 @@
 
 
 
+
 class Chessboard:
     def __init__(self):
         self.FEN = "rhbqkbhr/pppppppp/--------/--------/--------/--------/PPPPPPPP/RHBQKBHR"
         self.fifty_move_rule = 0
         self.ctmm = "w"
         self.en_passent = None
-        self.castle = [["b", "k"], ["Q", "K"]]
+        self.castle = [["q", "k"], ["Q", "K"]]
         self.board = [["*" for _ in range(8)] for _ in range(8)]
 
 

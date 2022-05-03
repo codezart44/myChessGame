@@ -9,16 +9,47 @@ class ChessPiece:
     def __init__(self, char, colour, coord):
         self.char = char
         self.colour = colour
-        self.coord = coord
+        self.index = f"{8-int(coord[1])}{int(ord(coord[0].upper()))-65}"
 
-        self.positional_moves = []
-        self.directional_moves = []
+        self.move_pattern = []
 
         self.legal_moves = []
 
+        self.times_moved = 0
+
+
+    def give_horse_moves(self):
+        pass
+
+
+    def give_set_moves(self):
+        """For pieces with set moves"""
+
+        if self.char.upper() == "H":
+            self.move_pattern = [12, 21, 19, 8, -12, -21, -19, -8]
+
+        if self.char.upper() == "K":
+            self.move_pattern == [-10, 1, 10, -1, -9, 11, 9, -11]
 
 
 
+    def give_sliding_moves(self):
+        """For sliding pieces"""
+
+        if self.char.upper() == "R":
+            self.move_pattern = [N, E, S, W]
+
+        if self.char.upper() == "B":
+            self.move_pattern = [NE, SE, SW, NW]
+
+        if self.char.upper() == "Q":
+            self.move_pattern = [N, E, S, W, NE, SE, SW, NW]
+
+
+
+
+piece = ChessPiece("Q", "b", "a8")
+print(piece.index)
 
 
 
@@ -35,4 +66,14 @@ class ChessPiece:
 60 61 62 63 64 65 66 67
 70 71 72 73 74 75 76 77
 
+8   o o o o o o o o
+7   o o o o o o o o
+6   o o o o o o o o
+5   o o o o o o o o
+4   o o o o o o o o
+3   o o o o o o o o
+2   o o o o o o o o
+1   o o o o o o o o
+
+    A B C D E F G H
 """
