@@ -13,7 +13,7 @@ class Chessboard:
 
     # Terminal methods
     def print_board(self):
-        """Prints a simple board in the terminal"""
+        """Prints a simple representation of the board in the terminal"""
         for i in range(8):
             print(8-i, end="    ")
             for j in range(8):
@@ -24,13 +24,18 @@ class Chessboard:
             print(chr(i+65), end=" ")
 
 
-
     # Main methods
     def set_up_pieces(self):
-        """Adds chess pieces according to the start set up"""
-        pass
+        """Places pieces on the board accoring to the FEN notation"""
+        for i in range(8):
+            for j in range(8):
+                if self.FEN[9*i+j] != "/":
+                    self.board[i][j] = self.FEN[9*i+j]
+            
+
 
 
 
 Chessboard = Chessboard()
+Chessboard.set_up_pieces()
 Chessboard.print_board()
