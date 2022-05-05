@@ -12,9 +12,14 @@ from ChessPiece import ChessPiece
 class Chessboard:
     def __init__(self):
         self.FEN = "rhbqkbhr/pppppppp/--------/--------/--------/--------/PPPPPPPP/RHBQKBHR"
+        
         self.board = [[empty for _ in range(8)] for _ in range(8)]
+        
         self.ctmm = "w"
+        
         self.castling_rights = [["q", "k"], ["Q", "K"]]
+        
+        self.pieces_on_board = []
 
     
 
@@ -25,9 +30,12 @@ class Chessboard:
         for i in range(8):
             print(8-i, end="    ")
             for j in range(8):
-                print(self.board[i][j].char, end=" ")
+                if self.board[i][j] == "-":
+                    print("-", end=" ")
+                else:
+                    print(self.board[i][j].char, end=" ")
             print()
-        print("\n    ", end="")
+        print("\n     ", end="")
         for i in range(8):
             print(chr(i+65), end=" ")
         print()
@@ -36,10 +44,8 @@ class Chessboard:
 
     def print_all_legal_moves(self):
         """Prints the legal moves of each piece"""
-        for row in self.board:
-            for piece in row:
-                if piece.char != "-":
-                    print(piece.legal_moves)   
+        for piece in self.pieces_on_board:
+            print(piece.legal_moves)   
 
 
 
@@ -48,22 +54,23 @@ class Chessboard:
     # Main methods
 
     def set_up_pieces(self):
-        """Places pieces on the board accorind to the FEN notation"""
+        """Places piece objects on the board accorind to the FEN notation"""
         # Places piece objects on board
         for i in range(8):
             for j in range(8):
-                if self.FEN[9*i+j] != "/":
+                if self.FEN[9*i+j] not in ["/", "-"]:
                     char = self.FEN[9*i+j]
                     index = f"{i}{j}"
-                    self.board[i][j] = ChessPiece(char, index)
+                    piece = ChessPiece(char, index)
+                    self.board[i][j] = piece
+                    self.pieces_on_board.append(piece)
+
 
 
     def give_pieces_consciousness(self):
         """Assigns legal moves to all pieces with respect to surrounding pieces"""
-        for row in self.board:
-            for piece in row:
-                if piece.char != "-":
-                    piece.assign_legal_moves(self.board)
+        for piece in self.pieces_on_board:
+            piece.assign_legal_moves(self.board)
         
 
 

@@ -1,7 +1,8 @@
 
+# DEFINITIONS
 # Directions
 N, E, S, W, NE, SE, SW, NW = -10, 1, 10, -1, -9, 11, 9, -11
-
+empty_square = "-"
 
 
 class ChessPiece:
@@ -30,63 +31,7 @@ class ChessPiece:
         self.times_moved = 0
 
 
-
-    def assign_legal_moves(self, board):
-        """Master move assignement function"""
-        if self.sliding is False:
-            self.give_fixed_moves(board)
-        if self.sliding is True:
-            self.give_sliding_moves(board)
-            
-
-
-    def give_fixed_moves(self, board):
-        """Assigns moves to pieces with fixed movement patterns"""
-        for val in self.movement_pattern:
-            move = str(int(self.index)+val)
-            if len(move) == 1:
-                move = f"0{move}"
-            if self.move_within_board(move) is True:
-                i, j = int(move[0]), int(move[1])
-                target = board[i][j]
-                if target.char == "-":
-                    self.legal_moves.append(move)
-                elif self.colour is not target.colour:
-                    self.legal_moves.append(move)
-
-
-
-    def give_sliding_moves(self, board):
-        """Assigns moves to sliding pieces"""
-        for direction in self.movement_pattern:
-            for i in range(1, 8):
-                move = str(int(self.index)+i*direction)
-                if len(move) == 1:
-                    move = f"0{move}"
-                if self.move_within_board(move) is True:
-                    i, j = int(move[0]), int(move[1])
-                    target = board[i][j]
-                    if target.char == "-":
-                        self.legal_moves.append(move)
-                    elif self.colour is not target.colour:
-                        self.legal_moves.append(move)
-                    else:
-                        break
-                break
-
-
-
-    def move_within_board(self, index):
-        """Checks whether a given square index is on the board"""
-        if int(index) in range(78):
-            i = int(index[0])
-            j = int(index[1])
-            if i in range(8) and j in range(8):
-                return True
-        return False
-
-
-
+    # Initial methods
 
     def give_movement_pattern(self):
         """Assigns values representing the change of index for piece specific moves"""
@@ -106,6 +51,69 @@ class ChessPiece:
             self.movement_pattern = [NE, SE, SW, NW]
         if self.char.upper() == "Q":
             self.movement_pattern = [N, E, S, W, NE, SE, SW, NW]
+
+
+
+    # Callable methods
+
+    def assign_legal_moves(self, board):
+        """Master move assignement function"""
+        if self.sliding is False:
+            self.give_fixed_moves(board)
+        if self.sliding is True:
+            self.give_sliding_moves(board)
+            
+
+    def give_fixed_moves(self, board):
+        """Assigns moves to pieces with fixed movement patterns"""
+        for val in self.movement_pattern:
+            move = str(int(self.index)+val)
+            if len(move) == 1:
+                move = f"0{move}"
+            if self.move_within_board(move) is True:
+                i, j = int(move[0]), int(move[1])
+                target = board[i][j]
+                if target is empty_square:
+                    self.legal_moves.append(move)
+                elif self.colour is not target.colour:
+                    self.legal_moves.append(move)
+
+
+    def give_sliding_moves(self, board):
+        """Assigns moves to sliding pieces"""
+        for direction in self.movement_pattern:
+            for i in range(1, 8):
+                move = str(int(self.index)+i*direction)
+                if len(move) == 1:
+                    move = f"0{move}"
+                if self.move_within_board(move) is True:
+                    i, j = int(move[0]), int(move[1])
+                    target = board[i][j]
+                    if target is empty_square:
+                        self.legal_moves.append(move)
+                    elif self.colour is not target.colour:
+                        self.legal_moves.append(move)
+                    else:
+                        break
+                break
+
+    
+
+    # Sub methods
+
+    def move_within_board(self, index):
+        """Checks whether a given square index is on the board"""
+        if int(index) in range(78):
+            i = int(index[0])
+            j = int(index[1])
+            if i in range(8) and j in range(8):
+                return True
+        return False
+
+
+
+
+
         
     
 
