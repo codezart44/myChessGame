@@ -9,7 +9,7 @@ class ChessPiece:
     """Supporting class for Chessboard"""
     def __init__(self, char, index):
         self.char = char
-        self.index = index
+        self.position = index
 
         # Uppercase - White & Lowercase - Black
         if char.isupper() is True:
@@ -58,6 +58,8 @@ class ChessPiece:
 
     def assign_legal_moves(self, board):
         """Master move assignement function"""
+        self.legal_moves = []
+
         if self.sliding is False:
             self.give_fixed_moves(board)
         if self.sliding is True:
@@ -67,7 +69,7 @@ class ChessPiece:
     def give_fixed_moves(self, board):
         """Assigns moves to pieces with fixed movement patterns"""
         for val in self.movement_pattern:
-            move = str(int(self.index)+val)
+            move = str(int(self.position)+val)
             if len(move) == 1:
                 move = f"0{move}"
             if self.move_within_board(move) is True:
@@ -83,7 +85,7 @@ class ChessPiece:
         """Assigns moves to sliding pieces"""
         for direction in self.movement_pattern:
             for i in range(1, 8):
-                move = str(int(self.index)+i*direction)
+                move = str(int(self.position)+i*direction)
                 if len(move) == 1:
                     move = f"0{move}"
                 if self.move_within_board(move) is True:
@@ -91,10 +93,10 @@ class ChessPiece:
                     target = board[i][j]
                     if target is empty_square:
                         self.legal_moves.append(move)
+                        continue
                     elif self.colour is not target.colour:
                         self.legal_moves.append(move)
-                    else:
-                        break
+                    break
                 break
 
     
