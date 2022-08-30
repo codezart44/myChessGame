@@ -2,6 +2,7 @@
 
 To push is to sent commited changes from the local repository to the remote repository.
 
+remote repo: https://github.com/codezart44/myChessGame.git
 
 $   git add .                               # staging all changes, to see if compatible...???
 $   git commit -m '[commit message]'        # commit changes with a description message
