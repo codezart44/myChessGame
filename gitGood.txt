@@ -15,3 +15,14 @@ To pull is a walk in the park
 
 $   git pull
 
+
+
+
+
+GitGood
+git add : adds files to be commited
+git commit: updates files in local repo
+git push: sends commited files to remote repo
+git pull: gets files from remote repo
+
+
