@@ -4,18 +4,18 @@
 empty_square = "-"
 
 # Imports
+from code import interact
 from ChessPiece import ChessPiece
 from ChessRules import ChessRules
-
+import numpy as np
 
 
 class Chessboard:
     def __init__(self):
-        self.FEN = "rhbqkbhr/pppppppp/--------/--------/--------/-----h--/PPPPPPPP/RHBQKBHR"
+        self.FEN = "rhbqkbhr/pppppppp/--------/--------/--------/--------/--------/RHBQKBHR"
         
-        self.board = [[empty_square for _ in range(8)] for _ in range(8)]
+        self.board = np.array([[empty_square for _ in range(8)] for _ in range(8)], dtype=object)
         
-
         self.moves = 0
 
         self.ctmm = ['w', 'b'][self.moves%2]
@@ -23,62 +23,28 @@ class Chessboard:
         self.castling_rights = [["q", "k"], ["Q", "K"]]
         
         self.pieces_on_board = []
-
-
-
+  
+    
     # TERMINAL METHODS
 
-    def print_board(self):
-        """Prints a simple representation of the board in the terminal"""
-        for i in range(8):
-            print(8-i, end="    ")
-            for j in range(8):
-                if self.board[i][j] is empty_square:
-                    print("-", end=" ")
-                else:
-                    print(self.board[i][j].char, end=" ")
-            print()
-        print("\n     ", end="")
-        for i in range(8):
-            print(chr(i+65), end=" ")
-        print()
-        print(f"ctmm: {self.ctmm}")
-
-
-    def print_all_legal_moves(self):
-        """Prints the legal moves of each piece"""
-        for piece in self.pieces_on_board:
-            print(piece.char, piece.legal_moves)   
-
-
-    def illustrate_move(self, from_square, to_square):
-        """Moves a piece to a square granted the move is legal"""
-        # Converts chess coordinate to matrix index
+    def make_move(self, from_square, to_square):
         from_coord = f"{8-int(from_square[1])}{ord(from_square[0].upper())-65}"
         to_coord = f"{8-int(to_square[1])}{ord(to_square[0].upper())-65}"
-        i1, j1 = int(from_coord[0]), int(from_coord[1])
+        i, j = int(from_coord[0]), int(from_coord[1])
         i2, j2 = int(to_coord[0]), int(to_coord[1])
-        
-        move = ChessRules(self, from_coord, to_coord)
-        if move.legality is True:
-            # Relocates and removes pieces, updates piece current position
-            if self.board[i2][j2] is not empty_square:
-                target_piece = self.board[i2][j2]
-                self.pieces_on_board.remove(target_piece)
 
-            self.board[i2][j2] = move.moving_piece
-            self.board[i1][j1] = empty_square
+        piece = self.board[i, j]
+        if piece.move_to(to_coord, self):
+            piece.index = to_coord
+            piece.i, piece.j = int(to_coord[0]), int(to_coord[1])
 
-            move.moving_piece.position = to_coord
-            self.update_legal_moves()
-
+            self.board[i2, j2] = piece
+            self.board[i, j] = empty_square
+            
             self.moves += 1
             self.ctmm = ['w', 'b'][self.moves%2]
             print(f"{from_coord} to {to_coord} was successful")
-        
-        # Reprint board and pieces' moves
-        # self.print_all_legal_moves()
-        self.print_board()
+        print(board)
 
 
     def move_asker(self):
@@ -86,8 +52,22 @@ class Chessboard:
             move = str(input("move piece [from-to] : "))
             from_square = move[:2]
             to_square = move[2:4]
-            self.illustrate_move(from_square, to_square)
+            self.make_move(from_square, to_square)
 
+
+    def __str__(self):
+        return f"""
+8   {' '.join([square if type(square) == str else square.char for square in self.board[0, :]])}
+7   {' '.join([square if type(square) == str else square.char for square in self.board[1, :]])}
+6   {' '.join([square if type(square) == str else square.char for square in self.board[2, :]])}
+5   {' '.join([square if type(square) == str else square.char for square in self.board[3, :]])}
+4   {' '.join([square if type(square) == str else square.char for square in self.board[4, :]])}
+3   {' '.join([square if type(square) == str else square.char for square in self.board[5, :]])}
+2   {' '.join([square if type(square) == str else square.char for square in self.board[6, :]])}
+1   {' '.join([square if type(square) == str else square.char for square in self.board[7, :]])}
+
+    A B C D E F G H
+ctmm: {self.ctmm}"""
 
 
     # MAIN METHODS
@@ -101,22 +81,8 @@ class Chessboard:
                     char = self.FEN[9*i+j]
                     index = f"{i}{j}"
                     piece = ChessPiece(char, index)
-                    self.board[i][j] = piece
+                    self.board[i, j] = piece
                     self.pieces_on_board.append(piece)
-
-
-    def give_pieces_consciousness(self):
-        """Assigns legal moves to all pieces with respect to surrounding pieces"""
-        for piece in self.pieces_on_board:
-            piece.assign_legal_moves(self.board)
-
-
-    def update_legal_moves(self):
-        """Updates legal moves for remaining pieces according to board state"""
-        for piece in self.pieces_on_board:
-            piece.assign_legal_moves(self.board)
-
-          
 
 
 
@@ -126,12 +92,9 @@ class Chessboard:
 
 
 # Program execution
-
 board = Chessboard()
 board.set_up_pieces()
-board.give_pieces_consciousness()
-# board.print_all_legal_moves()
-board.print_board()
+print(board)
 board.move_asker()
 
 
@@ -152,3 +115,67 @@ board.move_asker()
 
     A  B  C  D  E  F  G  H
 """
+
+
+
+
+
+
+# OLD
+
+
+    # def update_legal_moves(self):
+    #     """Updates legal moves for current pieces according to board state"""
+    #     for piece in self.pieces_on_board:
+    #         piece.assign_legal_moves(self.board)
+
+
+
+    # def print_all_legal_moves(self):
+    #     """Prints the legal moves of each piece"""
+    #     for piece in self.pieces_on_board:
+    #         print(piece.char, piece.legal_moves)   
+
+#    def print_board(self):
+#         """Prints a simple representation of the board in the terminal"""
+#         for i in range(8):
+#             print(8-i, end="    ")
+#             for j in range(8):
+#                 print(self.board[i, j], end=" ")
+#             print()
+#         print("\n     ", end="")
+#         for i in range(8):
+#             print(chr(i+65), end=" ")
+#         print()
+#         print(f"ctmm: {self.ctmm}")
+
+
+
+#     def illustrate_move(self, from_square, to_square):
+#         """Moves a piece to a square granted the move is legal"""
+#         # Converts chess coordinate to matrix index
+#         from_coord = f"{8-int(from_square[1])}{ord(from_square[0].upper())-65}"
+#         to_coord = f"{8-int(to_square[1])}{ord(to_square[0].upper())-65}"
+#         i1, j1 = int(from_coord[0]), int(from_coord[1])
+#         i2, j2 = int(to_coord[0]), int(to_coord[1])
+        
+#         move = ChessRules(self, from_coord, to_coord)
+#         if move.legality is True:
+#             # Relocates and removes pieces, updates piece current position
+#             if self.board[i2][j2] is not empty_square:
+#                 target_piece = self.board[i2][j2]
+#                 self.pieces_on_board.remove(target_piece)
+
+#             self.board[i2][j2] = move.moving_piece
+#             self.board[i1][j1] = empty_square
+
+#             move.moving_piece.position = to_coord
+#             self.update_legal_moves()
+
+#             self.moves += 1
+#             self.ctmm = ['w', 'b'][self.moves%2]
+#             print(f"{from_coord} to {to_coord} was successful")
+        
+#         # Reprint board and pieces' moves
+#         # self.print_all_legal_moves()
+#         self.print_board()
