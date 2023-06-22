@@ -1,77 +1,48 @@
 
-
-# Definitions
-empty_square = "-"
-
 # Imports
-from code import interact
-from ChessPiece import ChessPiece
-from ChessRules import ChessRules
+from chessPieceClasses.kingClass import King
+from chessPieceClasses.queenClass import Queen
+from chessPieceClasses.rookClass import Rook
+from chessPieceClasses.bishopClass import Bishop
+from chessPieceClasses.knightClass import Knight
+from chessPieceClasses.pawnClass import Pawn
+
 import numpy as np
+import traceback
 
 
 class Chessboard:
     def __init__(self):
-        self.FEN = "rhbqkbhr/pppppppp/--------/--------/--------/--------/--------/RHBQKBHR"
+
+        self.FEN = "rnbqkbnr/pppppppp/--------/--------/--------/--------/PPPPPPPP/RNBQKBNR"
+        self.FEN = "-n--k-n-/pppppppp/--------/--------/--------/--------/PPPPPPPP/-N--K-N-"
+
+        self.fancyFEN = '♖♘♗♕♔♗♘♖/♙♙♙♙♙♙♙♙/--------/--------/--------/--------/♟♟♟♟♟♟♟♟/♜♞♝♛♚♝♞♜'
         
-        self.board = np.array([[empty_square for _ in range(8)] for _ in range(8)], dtype=object)
+        self.matrix = np.zeros([8, 8], dtype=object)
         
         self.moves = 0
 
         self.ctmm = ['w', 'b'][self.moves%2]
 
         self.castling_rights = [["q", "k"], ["Q", "K"]]
-        
-        self.pieces_on_board = []
-  
-    
+
+        self.piece_dict = {'k': King, 'q': Queen, 'r': Rook, 'b': Bishop, 'n': Knight, 'p': Pawn}
+
+
     # TERMINAL METHODS
 
-    def make_move(self, from_square, to_square):
-        from_coord = f"{8-int(from_square[1])}{ord(from_square[0].upper())-65}"
-        to_coord = f"{8-int(to_square[1])}{ord(to_square[0].upper())-65}"
-        i, j = int(from_coord[0]), int(from_coord[1])
-        i2, j2 = int(to_coord[0]), int(to_coord[1])
-
-        piece = self.board[i, j]
-        if piece.move_to(to_coord, self):
-            piece.index = to_coord
-            piece.i, piece.j = int(to_coord[0]), int(to_coord[1])
-
-            self.board[i2, j2] = piece
-            self.board[i, j] = empty_square
-            
-            self.moves += 1
-            self.ctmm = ['w', 'b'][self.moves%2]
-            print(f"{from_coord} to {to_coord} was successful")
-        print(board)
-
-
-    def move_asker(self):
-        while True:
-            move = str(input("move piece [from-to] : "))
-            from_square = move[:2]
-            to_square = move[2:4]
-            self.make_move(from_square, to_square)
-
-
     def __str__(self):
-        return f"""
-8   {' '.join([square if type(square) == str else square.char for square in self.board[0, :]])}
-7   {' '.join([square if type(square) == str else square.char for square in self.board[1, :]])}
-6   {' '.join([square if type(square) == str else square.char for square in self.board[2, :]])}
-5   {' '.join([square if type(square) == str else square.char for square in self.board[3, :]])}
-4   {' '.join([square if type(square) == str else square.char for square in self.board[4, :]])}
-3   {' '.join([square if type(square) == str else square.char for square in self.board[5, :]])}
-2   {' '.join([square if type(square) == str else square.char for square in self.board[6, :]])}
-1   {' '.join([square if type(square) == str else square.char for square in self.board[7, :]])}
-
-    A B C D E F G H
-ctmm: {self.ctmm}"""
+        board_print = ''
+        for i, row in enumerate(self.matrix):
+            board_print += f'{8-i}   {" ".join(["-" if type(square)==int else square.char for square in row])}\n'
+        board_print += '\n    A B C D E F G H'
+        return board_print
+    
 
 
     # MAIN METHODS
-
+    
     def set_up_pieces(self):
         """Places piece objects on the board accorind to the FEN notation"""
         # Places piece objects on board
@@ -79,24 +50,59 @@ ctmm: {self.ctmm}"""
             for j in range(8):
                 if self.FEN[9*i+j] not in ["/", "-"]:
                     char = self.FEN[9*i+j]
-                    index = f"{i}{j}"
-                    piece = ChessPiece(char, index)
-                    self.board[i, j] = piece
-                    self.pieces_on_board.append(piece)
-
-
-
-
+                    # icon = self.fancyFEN[9*i+j]
+                    Piece = self.piece_dict[char.lower()]
+                    piece = Piece(i, j, char)
+                    self.matrix[i, j] = piece
 
 
 
 
 # Program execution
-board = Chessboard()
-board.set_up_pieces()
-print(board)
-board.move_asker()
+chessgame = Chessboard()
+chessgame.set_up_pieces()
+print(chessgame)
 
+while True:
+    
+    inp = input('from-to-coord: ')
+
+    if len(inp) == 2:
+        i, j = 8-int(inp[1]), ord(inp[0])-97
+        piece = chessgame.matrix[i, j]
+        if piece:
+            print(f'piece info: {piece.char}, ({piece.i}, {piece.j})')
+        else:
+            print('empty square')
+        continue
+
+    if len(inp) == 4:
+        i, j = 8-int(inp[1]), ord(inp[0])-97
+        i2, j2 = 8-int(inp[3]), ord(inp[2])-97
+
+        piece = chessgame.matrix[i, j]
+
+        try:
+            piece.validator(i2, j2, chessgame.matrix)
+
+            # NOTE pawn just pushed must be excluded from list of pawns 
+
+            # pieces = np.array(list(filter(lambda square: square != 0, chessgame.matrix.ravel())))
+            # pawns = np.array(list(filter(lambda piece: piece.char.upper() == 'P', pieces)))
+            # for pawn in pawns:
+            #     pawn:Pawn
+            #     pawn.last_move_double = False
+            
+        except AssertionError as err:
+            traceback.print_exc()               # NOTE will also print AssertionError: custom message 
+
+        print(chessgame)        
+
+
+
+# bishop = chessgame.matrix[3, 3]
+# print(bishop.squares_attacked(chessgame.matrix))
+# bishop.validator(2, 2, chessgame.matrix)
 
 
 
@@ -179,3 +185,35 @@ board.move_asker()
 #         # Reprint board and pieces' moves
 #         # self.print_all_legal_moves()
 #         self.print_board()
+
+
+
+
+    # def make_move(self, from_square: str, to_square: str) -> None:
+    #     from_coord = f"{8-int(from_square[1])}{ord(from_square[0].upper())-65}"
+    #     to_coord = f"{8-int(to_square[1])}{ord(to_square[0].upper())-65}"
+    #     i, j = int(from_coord[0]), int(from_coord[1])
+    #     i2, j2 = int(to_coord[0]), int(to_coord[1])
+
+    #     piece = self.board[i, j]
+    #     if piece.move_to(to_coord, self):
+    #         piece.index = to_coord
+    #         piece.i, piece.j = int(to_coord[0]), int(to_coord[1])
+
+    #         self.board[i2, j2] = piece
+    #         self.board[i, j] = empty_square
+            
+    #         self.moves += 1
+    #         self.ctmm = ['w', 'b'][self.moves%2]
+    #         print(f"{from_coord} to {to_coord} was successful")
+    #     print(self)
+
+
+    # def move_asker(self):
+    #     while True:
+    #         print(f'ctmm: {self.ctmm}')
+    #         move = str(input("move piece [from-to] : ")).strip()
+    #         from_square = move[:2]
+    #         to_square = move[2:4]
+    #         self.make_move(from_square, to_square)
+
