@@ -1,23 +1,44 @@
-# TEST DOC
-import numpy as np
-import pandas as pd
+import random
+from time import time
 
-# # board state, ctmm, catling rights, en passent, half move clock, full move clock (incremented after blacks move)
-# FEN_start = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
-# components = FEN_start.split(' ')
-# print(components)
 
-# squares = np.array(['.' for _ in range(64)], dtype=object)
-# i = 0
-# for char in components[0]:
-#     if char.isalpha():
-#         squares[i] = char
-#         i += 1
-#     if char.isnumeric():
-#         i += int(char)
+random.seed(2)
 
-# board = squares.reshape(8, 8)
-# print(board)
+import json
 
-target = 0
-assert target
+
+
+
+with open('./constants/bishop_occupancy_attacks.json', 'r') as f:
+    bishop_occupancy_attacks = json.load(f)
+
+for i in range(len(bishop_occupancy_attacks)):
+    map = bishop_occupancy_attacks[i]
+    bishop_occupancy_attacks[i] = {int(k): v for k,v in map.items()}
+
+with open('./constants/rook_occupancy_attacks.json', 'r') as f:
+    rook_occupancy_attacks = json.load(f)
+    
+for i in range(len(rook_occupancy_attacks)):
+    map = rook_occupancy_attacks[i]
+    rook_occupancy_attacks[i] = {int(k): v for k,v in map.items()}
+
+
+with open('./constants/attack_maps.py', 'w') as f:
+    f.writelines('BISHOP_OCCUPANCY_ATTACK_MAP = [\n')
+    for map in bishop_occupancy_attacks:
+        f.writelines('\t' + '{\n')
+        for k, v in map.items():
+            f.writelines('\t\t' +f'{k}: {v}' + ',\n')
+        f.writelines('\t' + '},\n')
+    f.writelines(']\n')
+
+    f.writelines('\n\nROOK_OCCUPANCY_ATTACK_MAP = [\n')
+    for map in rook_occupancy_attacks:
+        f.writelines('\t' + '{\n')
+        for k, v in map.items():
+            f.writelines('\t\t' +f'{k}: {v}' + ',\n')
+        f.writelines('\t' + '},\n')
+    f.writelines(']\n')
+
+    

@@ -1,3 +1,6 @@
+# Venv
+/.venv
+
 # Manually added
 *.txt
 *.DS_store
