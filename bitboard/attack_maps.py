@@ -5382,12 +5382,9 @@ BISHOP_OCCUPANCY_ATTACK_MAP = [
 ]
 
 
-
-
 #=======================================================#
 #				ROOK OCCUPANCY ATTACK MAP				#
 #=======================================================#
-
 
 ROOK_OCCUPANCY_ATTACK_MAP = [
 	{
