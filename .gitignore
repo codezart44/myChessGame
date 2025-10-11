@@ -3,7 +3,7 @@
 /__pycache__
 
 # Manually added
-*.DS_store
+*.DS_Store
 *.csv
 *.png
 *.jpg
