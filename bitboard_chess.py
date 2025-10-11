@@ -1,34 +1,25 @@
 from bitboard.constants import *    # main import from notation.py
 from bitboard.state import GameState
-
-
-# chessboard representation (unicode pieces)
-def print_chessboard():
-    """..."""
-    print()
-    for i in range(8):
-        print(f'{8-i}   ', end='')
-        for j in range(8):
-            square = 8*i+j
-            empty = True
-            for piece, bitboard in enumerate(GameState.bitboards):
-                if bitboard >> square & 0b1:
-                    print(f'{UNICODE_PIECES[piece]}', end=' ')
-                    empty = False
-                    break
-            if empty:
-                print('.', end=' ')
-        print()
-    print('\n    A B C D E F G H\n')
-    print('Side:', ['black', 'white'][GameState.side])
-    print('EnPa:', INDEX_COORD_MAP[GameState.enpassant])
-    print('Cast:', GameState.castling)
-    print(f'Move: {GameState.half}h, {GameState.full}f')
-
+from bitboard.bitlogic import print_bitboard, mask_knight_attack
+import random
 
 
 def main():
-    print_chessboard()
+
+    print_bitboard(mask_knight_attack(E4))
+
+    quit()
+    fen = 'r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1'
+    GameState.parse_fen(fen)
+    GameState.print_chessboard()
+    is_attacked = GameState.is_squared_attacked(F8, WHITE)
+    print(is_attacked)
+    
+
+
+    # print_bitboard(GameState.occup_bitboards[WHITE])
+    # print_bitboard(GameState.occup_bitboards[BLACK])
+    # print_bitboard(GameState.occup_bitboards[BOTH])
 
 
 if __name__=='__main__':

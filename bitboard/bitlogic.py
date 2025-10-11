@@ -3,8 +3,11 @@ from bitboard.constants import *
 from bitboard.attack_masks import (ROOK_ATTACK_MASKS,
                           ROOK_ATTACK_MASK_COUNTS,
                           BISHOP_ATTACK_MASKS,
-                          BISHOP_ATTACK_MASK_COUNTS,)
+                          BISHOP_ATTACK_MASK_COUNTS,
+                          PAWN_ATTACK_MASKS, KNIGHT_ATTACK_MASKS, KING_ATTACK_MASKS)
 from bitboard.bitcounts import BITCOUNT_LOOKUP_TABLE
+from bitboard.attack_maps import (BISHOP_OCCUPANCY_ATTACK_MAP,
+                                  ROOK_OCCUPANCY_ATTACK_MAP,)
 
 # credit to: https://www.youtube.com/watch?v=0F_aeUik91A&list=PLmN0neTso3Jxh8ZIylk74JpwfiWNI76Cs&index=9
 
@@ -140,7 +143,7 @@ def mask_pawn_attack(sqr, color):
     if sqr%8 == A_FILE: attack &= EMPTY_GH # Edge cases... 
     if sqr%8 == H_FILE: attack &= EMPTY_AB # ...litterally
     attack &= FULL # truncate overhang
-    return attack 
+    return attack
 
 def mask_knight_attack(sqr):
     """compute a mask for the squares attacked by a knight at position sqr"""
@@ -234,6 +237,29 @@ def mask_queen_attack(sqr, block):
     attack = mask_bishop_attack(sqr, block) | mask_rook_attack(sqr, block)
     return attack
 
+# SLIDING PIECES LEXICAL
+
+def mask_bishop_attack_lex(sqr, block):
+    """Return bishop lexical attack mask with regard to blockers."""
+    occupancy = block & BISHOP_ATTACK_MASKS[sqr]
+    return BISHOP_OCCUPANCY_ATTACK_MAP[sqr][occupancy]
+
+def mask_rook_attack_lex(sqr, block):
+    """..."""
+    occupancy = block & ROOK_ATTACK_MASKS[sqr]
+    return ROOK_OCCUPANCY_ATTACK_MAP[sqr][occupancy]
+
+def mask_queen_attack_lex(sqr, block): # about 10x faster than normal mask generator
+    """..."""
+    return mask_bishop_attack_lex(sqr, block) | mask_rook_attack_lex(sqr, block)
+
+
+
+
+
+
+
+
 #====================================#
 #         BITBOARD FUNCTIONS         #
 #====================================#
@@ -266,6 +292,13 @@ def mask_bit(square):
 def set_bit(bitboard, square):
     """set the bitboard square to 1"""
     return bitboard | (0b1 << square) # OR with masked bit
+
+# set bits
+def set_bits(bitboard, squares):
+    """Set the bitboard squares to 1."""
+    for square in squares:
+        bitboard |= 0b1 << square
+    return bitboard
 
 # get bit
 def get_bit(bitboard, square):
