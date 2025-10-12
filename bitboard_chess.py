@@ -1,6 +1,6 @@
 from bitboard.constants import *    # main import from notation.py
 from bitboard.state import GameState
-from bitboard.bitlogic import print_bitboard, mask_knight_attack
+from bitboard.blocking import print_bitboard, mask_knight_attack
 import random
 
 

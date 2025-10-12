@@ -1,6 +1,9 @@
 # Bitboard Constants
 
 # PIECE INDICIES 0-11
+PIECES = range(12)
+WHITE_PIECES = range(0,6)
+BLACK_PIECES = range(6,12)
 P,N,B,R,Q,K,p,n,b,r,q,k = range(12) # 
 
 # PIECE DATA
@@ -34,6 +37,7 @@ A1,B1,C1,D1,E1,F1,G1,H1,NA = 56,57,58,59,60,61,62,63,-1
 
 # FILES
 A_FILE,B_FILE,C_FILE,D_FILE,E_FILE,F_FILE,G_FILE,H_FILE = 0,1,2,3,4,5,6,7
+RANK_8,RANK_7,RANK_6,RANK_5,RANK_4,RANK_3,RANK_2,RANK_1 = 0,1,2,3,4,5,6,7
 
 # COLORS
 BLACK,WHITE,BOTH = 0,1,2
@@ -65,9 +69,13 @@ SIDE = WHITE # Side to move
 EN_PASSANT = -1 # no square
 
 # CASTLING RIGHTS
-# CASTLING = 0b0000 # Init castling rights
 # WK, WQ, BK, BQ = 0b0001, 0b0010, 0b0100, 0b1000 # 1, 2, 4, 8
-CASTLING = 'KQkq' # KQkq for full castling right, Kq for white king and black queen, - for none
+# CASTLING = 'KQkq' # KQkq for full castling right, Kq for white king and black queen, - for none
+WQ = 0b1000
+WK = 0b0100
+BQ = 0b0010
+BK = 0b0001
+CASTLING = WQ | WK | BQ | BK
 
 PIECE_BITBOARDS = [ # e.g. PIECE_BITBOARD[R] -> bitboard for white rooks
     # white pieces
