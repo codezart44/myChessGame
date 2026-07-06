@@ -1,6 +1,6 @@
 
 import numpy as np
-from chessPieceClasses.baseClass import ChessPiece
+from chess._depr.chessPieceClasses.baseClass import ChessPiece
 
 
 

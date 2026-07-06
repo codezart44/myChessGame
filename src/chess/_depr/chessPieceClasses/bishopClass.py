@@ -1,19 +1,19 @@
 
 import numpy as np
-from chessPieceClasses.baseClass import ChessPiece
+from chess._depr.chessPieceClasses.baseClass import ChessPiece
 
 
 
 
-class Rook(ChessPiece):
+class Bishop(ChessPiece):
     def __init__(self, i, j, char) -> None:
         super().__init__(i, j, char)
-        
-        
+
+
 
     def attacking_squares(self, matrix):
         attacked = []
-        directions = [(-1, 0), (0, 1), (1, 0), (0, -1)]
+        directions = [(-1, -1), (-1, 1), (1, -1), (1, 1)]
         for d in directions:
             i2, j2 = self.i, self.j
 
@@ -35,14 +35,20 @@ class Rook(ChessPiece):
         return attacked
 
 
-
-    def validate_rook_move(self, i2, j2, matrix):
+    def validate_bishop_move(self, i2, j2, matrix):
         '''
         
         '''
+
         self.validate_basics(i2, j2, matrix)
-        assert i2 == self.i or j2 == self.j, 'The rook may only move orthogonally'
-        assert (i2, j2) in self.attacking_squares(matrix), 'The rook is not attacking that square'
+
+        from_index = int(f'{self.i}{self.j}')
+        to_index = int(f'{i2}{j2}')
+        dif = to_index - from_index
+        assert 0 in [dif%9, dif%11], 'The bishop may only move diagonally'
+
+        assert (i2, j2) in self.attacking_squares(matrix)
+
 
 
 
@@ -50,12 +56,30 @@ class Rook(ChessPiece):
         '''
         
         '''
-        self.validate_rook_move(i2, j2, matrix)
+        self.validate_bishop_move(i2, j2, matrix)
         self.absolute_move(i2, j2, matrix)
-        
+
+
+    
 
 
 
+
+
+
+
+# # matrix = np.matrix([[f'{i}{j}' for j in range(8)] for i in range(8)])
+# matrix = np.zeros([8, 8])
+# matrix[2, 5] = 3
+
+
+
+# bishop = Bishop(5, 2, 'w')
+# for (i, j) in bishop.squares_attacked(matrix):
+#     matrix[i, j] = 1
+# matrix[bishop.i, bishop.j] = 9
+# # bishop.validator(1, 6, matrix)
+# print(matrix)
 
 
 

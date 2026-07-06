@@ -1,6 +1,6 @@
-from constants import *
-from bits import BitOperations as bop
-from attacks import AttackMasks as masks
+from src.chess.bitboard.constants import *
+from src.chess.bitboard.bits import BitOperations as bop
+from src.chess.bitboard.attacks import AttackMasks as masks
 
 class GameState:
     piece_bitboards:list = PIECE_BITBOARDS.copy()

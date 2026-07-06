@@ -1,11 +1,11 @@
 
 # Imports
-from chessPieceClasses.kingClass import King
-from chessPieceClasses.queenClass import Queen
-from chessPieceClasses.rookClass import Rook
-from chessPieceClasses.bishopClass import Bishop
-from chessPieceClasses.knightClass import Knight
-from chessPieceClasses.pawnClass import Pawn
+from chess._depr.chessPieceClasses.kingClass import King
+from chess._depr.chessPieceClasses.queenClass import Queen
+from chess._depr.chessPieceClasses.rookClass import Rook
+from chess._depr.chessPieceClasses.bishopClass import Bishop
+from chess._depr.chessPieceClasses.knightClass import Knight
+from chess._depr.chessPieceClasses.pawnClass import Pawn
 
 import numpy as np
 import traceback

@@ -1,8 +1,8 @@
-from constants import *
-from attacks import AttackMasks as masks
-from bits import BitOperations as bop
-from utils import print_bitboard, print_chessboard, fen_to_bitboards
-from moves import pawn_moves, king_moves, knight_moves, bishop_moves, rook_moves, queen_moves, get_moves
+from src.chess.bitboard.constants import *
+from src.chess.bitboard.attacks import AttackMasks as masks
+from src.chess.bitboard.bits import BitOperations as bop
+from src.chess.bitboard.utils import print_bitboard, print_chessboard, fen_to_bitboards
+from src.chess.bitboard.moves import pawn_moves, king_moves, knight_moves, bishop_moves, rook_moves, queen_moves, get_moves
 
 # def print_squares_attacked_by(side, piece_bitboards, occup_bitboards):
 #     print()

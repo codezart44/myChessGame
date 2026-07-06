@@ -1,4 +1,4 @@
-from lookup.bit_counts import BITCOUNT_LOOKUP_TABLE
+from src.chess.lookup.bit_counts import BITCOUNT_LOOKUP_TABLE
 
 # import BitOperations as bo
 class BitOperations:

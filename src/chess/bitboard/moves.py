@@ -1,8 +1,8 @@
-from constants import *
-from bits import BitOperations as bop
-from attacks import AttackMasks as masks
-from utils import piece_to_color_bitboards, print_bitboard
-from attacks import squared_attacked_by
+from src.chess.bitboard.constants import *
+from src.chess.bitboard.bits import BitOperations as bop
+from src.chess.bitboard.attacks import AttackMasks as masks
+from src.chess.bitboard.utils import piece_to_color_bitboards, print_bitboard
+from src.chess.bitboard.attacks import squared_attacked_by
 
 # Seudo legal moves
 # Moves are a subset of attacks

@@ -1,6 +1,6 @@
-from bitboard.constants import *    # main import from notation.py
-from bitboard.state import GameState
-from bitboard.blocking import print_bitboard, mask_knight_attack
+from src.chess.bitboard.constants import *    # main import from notation.py
+from src.chess.bitboard.state import GameState
+from src.chess.bitboard.blocking import print_bitboard, mask_knight_attack
 import random
 
 
