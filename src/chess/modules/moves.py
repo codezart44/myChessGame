@@ -1,8 +1,8 @@
-from src.chess.bitboard.constants import *
-from src.chess.bitboard.bits import BitOperations as bop
-from src.chess.bitboard.attacks import AttackMasks as masks
-from src.chess.bitboard.utils import piece_to_color_bitboards, print_bitboard
-from src.chess.bitboard.attacks import squared_attacked_by
+from chess.modules.constants import *
+from chess.modules.bits import BitOperations as bop
+from chess.modules.attacks import AttackMasks as masks
+from chess.modules.utils import piece_to_color_bitboards, print_bitboard
+from chess.modules.attacks import squared_attacked_by
 
 # Seudo legal moves
 # Moves are a subset of attacks
@@ -216,16 +216,5 @@ def get_moves(piece_bitboards, color_bitboards, color):
             if piece == (K if is_white else k):
                 ASCII_PIECES[piece], INDEX_COORD_MAP[sqr], [INDEX_COORD_MAP[m] for m in king_moves(sqr, piece_bitboards, color_bitboards, color, 0b0000)[0]]
 
-
-
-
-
-
 # Fully legal moves
 # copy make instead of make reverse
-
-
-
-
-
-

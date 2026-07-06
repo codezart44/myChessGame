@@ -1,13 +1,13 @@
-from src.chess.bitboard.constants import *
-from src.chess.bitboard.bits import BitOperations as bop
-from src.chess.lookup.attack_masks import (
+from chess.modules.constants import *
+from chess.modules.bits import BitOperations as bop
+from chess.lookup.attack_masks import (
     PAWN_ATTACK_MASKS,
     KNIGHT_ATTACK_MASKS,
     KING_ATTACK_MASKS,
     BISHOP_ATTACK_MASKS,
     ROOK_ATTACK_MASKS,
 )
-from src.chess.lookup.attack_maps import (
+from chess.lookup.attack_maps import (
     BISHOP_OCCUPANCY_ATTACK_MAP,
     ROOK_OCCUPANCY_ATTACK_MAP,
 )

@@ -1,7 +1,7 @@
 import random
-from src.chess.bitboard.bits import BitOperations as bop
-from src.chess.bitboard.attacks import AttackMasks as masks
-from src.chess.bitboard.constants import *
+from chess.modules.bits import BitOperations as bop
+from chess.modules.attacks import AttackMasks as masks
+from chess.modules.constants import *
 from src.chess.lookup.attack_masks import (
     ROOK_ATTACK_MASKS,
     BISHOP_ATTACK_MASKS,

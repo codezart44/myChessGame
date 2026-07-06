@@ -1,5 +1,5 @@
-from src.chess.bitboard.bits import BitOperations as bop
-from src.chess.bitboard.constants import *
+from chess.modules.bits import BitOperations as bop
+from chess.modules.constants import *
 
 
 def fen_to_bitboards(fen:str) -> None:
